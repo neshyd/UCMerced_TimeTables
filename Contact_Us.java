@@ -16,6 +16,8 @@ public class Contact_Us extends javax.swing.JFrame {
     ResultSet rs = null;
     PreparedStatement ps = null;
     int userId;
+    String feed;
+    int feedId;
     
     public Contact_Us(int userId) {
         this.userId = userId;
@@ -50,6 +52,37 @@ public class Contact_Us extends javax.swing.JFrame {
         }
             
     }
+    private void getfeedId(){
+        try{
+            String sql = "SELECT Max(feed_id) FROM feedback";
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            if (rs.next()){
+                String i = rs.getString("feed_id");
+                feedId = Integer.parseInt(i);
+                feedId += 1;
+            }
+        }
+        catch(Exception e){
+            JOptionPane.showMessageDialog(null, e);
+        }
+        
+    }
+    private void feedback(){
+        String sql = "INSERT into feedback values(?,?,?)";
+        try{
+            ps = conn.prepareStatement(sql);
+            String id = Integer.toString(feedId);
+            ps.setString(1, id);
+            String uid = Integer.toString(userId);
+            ps.setString(1, uid);
+            ps.setString(3, feed);
+            
+        }
+        catch(Exception e){
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
     
 
     /**
@@ -61,10 +94,10 @@ public class Contact_Us extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        textArea1 = new java.awt.TextArea();
+        feedback = new java.awt.TextArea();
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        submit = new javax.swing.JButton();
+        home = new javax.swing.JButton();
         log_out = new javax.swing.JButton();
         name_field = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -76,17 +109,17 @@ public class Contact_Us extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tempus Sans ITC", 1, 24)); // NOI18N
         jLabel1.setText("Contact Us");
 
-        jButton1.setText("Submit");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        submit.setText("Submit");
+        submit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                submitActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Home");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        home.setText("Home");
+        home.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                homeActionPerformed(evt);
             }
         });
 
@@ -112,13 +145,13 @@ public class Contact_Us extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jButton1)
+                        .addComponent(submit)
                         .addGap(25, 25, 25))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(24, 24, 24)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2)
+                        .addComponent(home)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -129,7 +162,7 @@ public class Contact_Us extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(71, 71, 71)
-                                .addComponent(textArea1, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(feedback, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -145,7 +178,7 @@ public class Contact_Us extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton2)
+                        .addComponent(home)
                         .addComponent(jLabel2)
                         .addComponent(name_field)
                         .addComponent(log_out)))
@@ -154,32 +187,53 @@ public class Contact_Us extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
                 .addGap(22, 22, 22)
-                .addComponent(textArea1, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(feedback, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
+                .addComponent(submit)
                 .addContainerGap(29, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void submitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitActionPerformed
+        try{
+            feed = feedback.getText();
+            feedback();
+            conn.close();
+            rs.close();
+            ps.close();
+            
+        }
+        catch(Exception e){
+            JOptionPane.showMessageDialog(null, e);
+        }
+        Home x = new Home(userId);
+        x.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_submitActionPerformed
 
     private void log_outActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_log_outActionPerformed
         try{
+            conn.close();
             rs.close();
             ps.close(); }
         catch(Exception e) { }
-        //login x = new login();
-        //x.setVisible(true);
+        Login x = new Login();
+        x.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_log_outActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    private void homeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeActionPerformed
+        try{
+            conn.close();
+            rs.close();
+            ps.close(); }
+        catch(Exception e) { }
+        Home x = new Home(userId);
+        x.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_homeActionPerformed
 
     /**
      * @param args the command line arguments
@@ -216,14 +270,14 @@ public class Contact_Us extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private java.awt.TextArea feedback;
+    private javax.swing.JButton home;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JButton log_out;
     private javax.swing.JLabel name_field;
-    private java.awt.TextArea textArea1;
+    private javax.swing.JButton submit;
     // End of variables declaration//GEN-END:variables
 }

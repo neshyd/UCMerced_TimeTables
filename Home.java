@@ -59,7 +59,7 @@ public class Home extends javax.swing.JFrame {
     private void Update_table(){//this is how you update a table
        try{
         
-        String sql = "SELECT ";
+        String sql = "SELECT service_name,time_opens,time_close,time_week,time_day FROM ( SELECT fav_serviceid FROM fav WHERE fav_userid = "+ userId+ ") AS favorite,services, times WHERE favorite.fav_serviceid = time_serviceid  AND service_id = favorite.fav_serviceid  AND service_id = time_serviceid;";
         ps = conn.prepareStatement(sql);
         rs = ps.executeQuery();
         Fav_Table.setModel(DbUtils.resultSetToTableModel(rs));
@@ -215,6 +215,7 @@ public class Home extends javax.swing.JFrame {
 
     private void contactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contactActionPerformed
         try{//this is to make sure before you move to next page, you let go of all resources
+                conn.close();
                 rs.close(); 
                 ps.close(); }
             catch(Exception e) { } 
@@ -225,11 +226,12 @@ public class Home extends javax.swing.JFrame {
 
     private void log_outActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_log_outActionPerformed
         try{
+                conn.close();
                 rs.close(); 
                 ps.close(); }
         catch(Exception e) { } 
-        //login x = new login();
-        //x.setVisible(true);
+        Login x = new Login();
+        x.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_log_outActionPerformed
 
@@ -239,6 +241,7 @@ public class Home extends javax.swing.JFrame {
             String selectedItem = selectedItemObj.toString();
         }
         try{
+            conn.close();
             rs.close();
             ps.close();
         }
