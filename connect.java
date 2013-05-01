@@ -5,6 +5,7 @@
 package ucmerced_timetables;
 import java.sql.*;
 import javax.swing.*;
+import net.proteanit.sql.DbUtils;
 
 /**
  *
@@ -15,7 +16,7 @@ public class connect {
     public static Connection connect(){
       try{
           Class.forName("org.sqlite.JDBC");
-          Connection conn = DriverManager.getConnection("jdbc:sqlite:BaseAssult");
+          Connection conn = DriverManager.getConnection("jdbc:sqlite:TimeTables.sqlite3");
           
           return conn;
       }
