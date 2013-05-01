@@ -6,6 +6,7 @@ package ucmerced_timetables;
 import java.sql.*;
 import javax.swing.*;
 import net.proteanit.sql.DbUtils;
+
 /**
  *
  * @author Jonathan
@@ -75,7 +76,7 @@ public class Contact_Us extends javax.swing.JFrame {
             String id = Integer.toString(feedId);
             ps.setString(1, id);
             String uid = Integer.toString(userId);
-            ps.setString(1, uid);
+            ps.setString(2, uid);
             ps.setString(3, feed);
             
         }
@@ -208,6 +209,7 @@ public class Contact_Us extends javax.swing.JFrame {
         catch(Exception e){
             JOptionPane.showMessageDialog(null, e);
         }
+        JOptionPane.showMessageDialog(null, "Thank you for the Feedback, we will respond shortly");
         Home x = new Home(userId);
         x.setVisible(true);
         this.dispose();
