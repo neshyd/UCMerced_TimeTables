@@ -20,6 +20,10 @@ public class Home extends javax.swing.JFrame {
     ResultSet rs = null;
     PreparedStatement ps = null;
     int userId;
+    int service_id;
+    String item[];
+    String selectedItem;
+    //JComboBox buildings_list = new JComboBox(item);
 
     public Home(int userId) {//this stuff runs when the page loads
         this.userId = userId;
@@ -29,8 +33,31 @@ public class Home extends javax.swing.JFrame {
         Update_Name();//changes the name on the page to the users name
         
     }
-    public void Getting_userName(int userId){
+    public void Getting_userId(int userId){
         this.userId = userId;
+    }
+    private void box(){
+        try{
+            String sql = "SELECT service_name FROM services";
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            int index = 0;
+            while(rs.next()){
+                item[index] = rs.getString("service_name");
+                index++;
+            }
+        }
+         catch(Exception e){//if the sql stament is wrong or errors it will throw exception
+            JOptionPane.showMessageDialog(null, e);
+        }finally{
+            try{
+                rs.close();//always close these after every sql statment to prevent locks
+                ps.close();
+            }
+            catch(Exception e){//if cannot close will throw exception
+                JOptionPane.showMessageDialog(null, e);
+            }
+        }
     }
     private void Update_Name(){//this is changing the text field to the user's name
         try{
@@ -190,7 +217,7 @@ public class Home extends javax.swing.JFrame {
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(40, 40, 40)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(buildings_list, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buildings_list, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(search_box))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -208,7 +235,7 @@ public class Home extends javax.swing.JFrame {
                 rs.close(); 
                 ps.close(); }
             catch(Exception e) { } 
-        //buy x = new buy(Email);
+        //ServicePage x = new ServicePage(service_id);
         //x.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_settingsActionPerformed
@@ -238,16 +265,23 @@ public class Home extends javax.swing.JFrame {
     private void search_boxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_search_boxActionPerformed
         Object selectedItemObj = buildings_list.getSelectedItem();
         if(selectedItemObj != null){
-            String selectedItem = selectedItemObj.toString();
+            selectedItem = selectedItemObj.toString();
         }
         try{
+            String sql = "SELECT service_id FROM services WHERE service_name = "+ selectedItem +";";
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            if(rs.next()){
+                String i = rs.getString("service_id");
+                service_id = Integer.parseInt(i);
+            }
             conn.close();
             rs.close();
             ps.close();
         }
         catch(Exception e){}
-        //what ever its called
-        //x.setVisible(true);
+        ServicePage x = new ServicePage(userId,service_id);
+        x.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_search_boxActionPerformed
     
