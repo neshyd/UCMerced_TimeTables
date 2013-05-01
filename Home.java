@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package ucmerced_timetables;
+package src;
 import java.sql.*;
 import javax.swing.*;
 import net.proteanit.sql.DbUtils;
@@ -31,6 +31,7 @@ public class Home extends javax.swing.JFrame {
         conn = connect.connect();
         Update_table();//updates the table to get all the favorites
         Update_Name();//changes the name on the page to the users name
+        box();
         
     }
     public void Getting_userId(int userId){

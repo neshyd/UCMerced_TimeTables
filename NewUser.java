@@ -2,14 +2,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package ucm_timetables;
+package src;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import javax.swing.*;
-import ucmerced_timetables.Home;
-import ucmerced_timetables.connect;
+
 
 
 /**
@@ -64,21 +63,17 @@ public class NewUser extends javax.swing.JFrame {
 
         jLabel4.setText("password");
 
-        text_username.setText("username");
         text_username.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 text_usernameActionPerformed(evt);
             }
         });
 
-        userpass.setText("jPasswordField1");
         userpass.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 userpassActionPerformed(evt);
             }
         });
-
-        retypeuserpass.setText("jPasswordField2");
 
         jLabel5.setText("retype pass");
 
@@ -104,7 +99,7 @@ public class NewUser extends javax.swing.JFrame {
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                             .addGap(51, 51, 51)
                             .addComponent(jButton1)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 69, Short.MAX_VALUE)
                             .addComponent(jButton2))
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                             .addGap(24, 24, 24)

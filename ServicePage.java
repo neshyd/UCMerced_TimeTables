@@ -1,4 +1,4 @@
-package ucmerced_timetables;
+package src;
 import java.sql.*;
 import javax.swing.*;
 import net.proteanit.sql.DbUtils;
