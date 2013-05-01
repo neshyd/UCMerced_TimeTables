@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package ucmerced_timetables;
+package src;
 import java.sql.*;
 import javax.swing.*;
 import net.proteanit.sql.DbUtils;
