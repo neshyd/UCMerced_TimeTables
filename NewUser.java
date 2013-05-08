@@ -21,8 +21,7 @@ public class NewUser extends javax.swing.JFrame {
     Connection conn = null;
     ResultSet rs = null;
     PreparedStatement ps = null;
-    String id;
-    int userid;
+    String userid;
     
     /**
      * Creates new form NewUser
@@ -85,6 +84,11 @@ public class NewUser extends javax.swing.JFrame {
         });
 
         jButton2.setText("Cancel");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -148,16 +152,15 @@ public class NewUser extends javax.swing.JFrame {
     
     private void getUserID() {
         try{
-               String sql = "Select Max(user_id) FROM users";
+               String sql = "Select max(user_id)+1 FROM user";
                ps = conn.prepareStatement(sql);
                rs = ps.executeQuery();
                if(rs.next()) {
-                   String i = rs.getString("user_id");
-                   userid = Integer.parseInt(i);
-                   userid += 1;
+                   userid = rs.getString("max(user_id)+1");
+                   
                }
     }
-        
+        //Lawrence you can talk to me about efficiency once you can code better then me </3*
         
          catch(Exception e){
             JOptionPane.showMessageDialog(null, e);
@@ -166,16 +169,14 @@ public class NewUser extends javax.swing.JFrame {
     }
     
     private void users() {
-        
-        String sql = "INSERT into users values (?,?,?)";
+        getUserID();
+        String sql = "INSERT into user values (?,?,?)";
         try {
             ps = conn.prepareStatement(sql);
-            String uid = Integer.toString(userid);
-            ps.setString(1, uid);
-            String username = text_username.getText();
-            ps.setString(2, username);
-            String password = userpass.getText();
-            ps.setString(3, password);
+            ps.setString(1, userid);
+            ps.setString(2, text_username.getText());
+            ps.setString(3, userpass.getText());
+            ps.execute();
         }
         catch(Exception e) {
             JOptionPane.showMessageDialog(null, e);
@@ -205,7 +206,8 @@ public class NewUser extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "User created");
                 rs.close();
                 ps.close();
-                Home x = new Home(userid);
+                int id = Integer.parseInt(userid);
+                Home x = new Home(id);
                 x.setVisible(true);
                 this.dispose();  
             
@@ -233,6 +235,17 @@ public class NewUser extends javax.swing.JFrame {
         
         
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+         try{
+                conn.close();
+                rs.close(); 
+                ps.close(); }
+        catch(Exception e) { } 
+        Login x = new Login();
+        x.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
