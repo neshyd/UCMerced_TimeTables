@@ -14,24 +14,50 @@ public class ServicePage extends javax.swing.JFrame {
     PreparedStatement ps = null;
     int service_id;
     int userId;
+    boolean bool;
     
     public ServicePage(int userId,int service_id) {
         initComponents();
         conn = connect.connect();
         this.service_id = service_id;
         this.userId = userId;
+        Update_Name();
         Update_table();
     }
     public void Getting_userId(int userId){
         this.userId = userId;
     }
+    
     public void Getting_service_id(int service_id){
         this.service_id = service_id;
+    }
+    private void Update_Name(){//this is changing the text field to the user's name
+        try{
+            String sql = "SELECT user_name FROM user WHERE user_id = " +userId+";";//sql statement
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            if(rs.next()){
+                String i = rs.getString("user_name");
+                name_field.setText(i);//setting the name_field to the user name, will change the text of that field
+            }
+        }
+        catch(Exception e){//if the sql stament is wrong or errors it will throw exception
+            JOptionPane.showMessageDialog(null, e);
+        }finally{
+            try{
+                rs.close();//always close these after every sql statment to prevent locks
+                ps.close();
+            }
+            catch(Exception e){//if cannot close will throw exception
+                JOptionPane.showMessageDialog(null, e);
+            }
+        }
+            
     }
     private void Update_table(){//this is how you update a table
        try{
         
-        String sql = "SELECT service_name,time_opens,time_close,time_week,time_day FROM services, times WHERE service_id = "+ service_id + "AND service_id = time_serviceid;";
+        String sql = "SELECT service_name,time_opens,time_close,time_week,time_day FROM services, times WHERE service_id = "+ service_id + " AND service_id = time_serviceid;";
         ps = conn.prepareStatement(sql);
         rs = ps.executeQuery();
         Fav_Table.setModel(DbUtils.resultSetToTableModel(rs));
@@ -46,6 +72,31 @@ public class ServicePage extends javax.swing.JFrame {
                 ps.close(); }
             catch(Exception e) { } } 
     }
+    private boolean exists(){
+        
+        
+        try{
+            
+            String sql = "SELECT fav_serviceid FROM fav WHERE fav_userid = "+userId+" AND fav_serviceid = "+service_id+" ;";
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            if(rs.next()){
+                bool = true;
+            }
+            else{
+                bool = false;
+            }
+        }
+        catch(Exception e){
+           JOptionPane.showMessageDialog(null,e);
+       }finally {
+            try{
+                rs.close(); 
+                ps.close(); }
+            catch(Exception e) { } }  
+        return bool;
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -169,7 +220,26 @@ public class ServicePage extends javax.swing.JFrame {
     }//GEN-LAST:event_homeActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        
+        try{
+            if(exists() == false){
+                String sql = "INSERT into fav VALUES(?,?);";
+                ps = conn.prepareStatement(sql);
+                String userid = Integer.toString(userId);
+                ps.setString(1,userid);
+                String servId = Integer.toString(service_id);
+                ps.setString(2, servId);
+                ps.execute();
+                JOptionPane.showMessageDialog(null,"Added to Favorites");
+            }
+            else{
+                JOptionPane.showMessageDialog(null, "Already in Favorites");
+            }
+        }
+        catch(Exception e){
+            JOptionPane.showMessageDialog(null,e);
+        }
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

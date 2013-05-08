@@ -21,8 +21,7 @@ public class Login extends javax.swing.JFrame {
     
     Connection conn = null;
     ResultSet rs = null;
-    PreparedStatement ps = null;
-    int userID; 
+    PreparedStatement ps = null; 
     
     public Login() {
         initComponents();
@@ -137,18 +136,18 @@ public class Login extends javax.swing.JFrame {
     private void login_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_login_buttonActionPerformed
        
         try{ 
-            String sql = "SELECT * FROM users WHERE user_name = ? AND user_pass = ?;";
+            String sql = "SELECT * FROM user WHERE user_name = ? AND user_pass = ?;";
            ps = conn.prepareStatement(sql);
            ps.setString(1,text_username.getText());
            ps.setString(2,text_password.getText());
            rs=ps.executeQuery();
             if(rs.next()) {
                 JOptionPane.showMessageDialog(null, "Username and password is correct");
-               String id = rs.getString("ID");
-                userID = Integer.parseInt(id);
+               String id = rs.getString("user_id");
+                int userID = Integer.parseInt(id);
                 ps.close();
                 rs.close();
-                close();
+                //close();
                 Home x = new Home(userID);
                 x.setVisible(true);
                 this.dispose();
@@ -159,15 +158,8 @@ public class Login extends javax.swing.JFrame {
         }
         
         catch(Exception e) {
-            JOptionPane.showMessageDialog(null, "it got here.");
             JOptionPane.showMessageDialog(null, e);
         }
-        
-         finally {
-            try{
-                rs.close(); 
-                ps.close(); }
-            catch(Exception e) { } }
     }//GEN-LAST:event_login_buttonActionPerformed
 
     private void registerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerActionPerformed
